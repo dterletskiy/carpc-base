@@ -36,8 +36,8 @@ link_directories( ${TRACING_BINARY_DIR} )
 #                                      Code generation                                    #
 #                                                                                         #
 ###########################################################################################
-find_files_by_ext( PLANTUML_FILES ${PROJECT_SOURCE_DIR} "${EXTENTIONS_PLANTUML}" )
-generate_plantumls( "${PLANTUML_FILES}" PROJECT_GEN_PLANTUML_FILES )
+find_files_by_ext( RECURSE FILES PLANTUML_FILES LOCATION ${PROJECT_SOURCE_DIR} EXTENTIONS ${EXTENTIONS_PLANTUML} )
+generate_plantumls( PLANTUML_FILES ${PLANTUML_FILES} GENERATED_FILES PROJECT_GEN_PLANTUML_FILES )
 
 
 
@@ -46,7 +46,7 @@ generate_plantumls( "${PLANTUML_FILES}" PROJECT_GEN_PLANTUML_FILES )
 #                                   Build source file list                                #
 #                                                                                         #
 ###########################################################################################
-find_files_by_ext( PROJECT_SOURCE_FILES ${PROJECT_SOURCE_DIR} "${EXTENTIONS_CPP_SRC}" )
+find_files_by_ext( RECURSE FILES PROJECT_SOURCE_FILES LOCATION ${PROJECT_SOURCE_DIR} EXTENTIONS ${EXTENTIONS_CPP_SRC} )
 
 
 
