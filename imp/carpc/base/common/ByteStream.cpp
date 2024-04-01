@@ -21,7 +21,7 @@ ByteStream::ByteStream( const void* const buffer, const std::size_t size, const 
    // this configuration means that m_buffer will be a linear extendable buffer
 {
    SYS_INF( );
-   push( buffer, size );
+   build( buffer, size );
 }
 
 ByteStream::ByteStream( const ByteStream& other )
@@ -39,6 +39,13 @@ ByteStream::ByteStream( ByteStream&& other )
 ByteStream::~ByteStream( )
 {
    SYS_INF( );
+}
+
+bool ByteStream::build( const void* const buffer, const std::size_t size )
+{
+   SYS_INF( );
+   reset( );
+   return push( buffer, size );
 }
 
 void ByteStream::debug_message( const char* const message ) const

@@ -71,6 +71,8 @@ namespace carpc {
          ByteStream( ByteStream&& other );
          ~ByteStream( );
 
+         bool build( const void* const buffer, const std::size_t size );
+
       /*****************************************
        *
        * Push methods
