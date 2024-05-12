@@ -64,7 +64,7 @@ add_library(
       ${PROJECT_SOURCE_FILES}
    )
 
-target_link_libraries( ${PROJECT_TARGET_NAME} ${TRACING_TARGET_NAME} )
+target_link_libraries( ${PROJECT_TARGET_NAME} PUBLIC ${TRACING_TARGET_NAME} )
 
 add_custom_target( "${PROJECT_TARGET_NAME}_documentation" ALL
       COMMENT "cmake ${PROJECT_TARGET_NAME}_documentation"
