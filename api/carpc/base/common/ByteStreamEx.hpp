@@ -253,7 +253,7 @@ namespace carpc {
          void dump( ) const;
          void reset( );
       private:
-         void debug_message( const char* const message ) const;
+         void debug_message( const char* const message = "" ) const;
          void debug_message_ex( const char* const format, ... ) const;
       private:
          CircularBuffer m_buffer;
@@ -551,7 +551,7 @@ namespace carpc {
 
       if( types::TTypeInfo< CONSTLESS_TYPE >::id != id )
       {
-         MSG_ERR( "type id mismatch: '%u' != '%u'", types::TTypeInfo< CONSTLESS_TYPE >::id, id );
+         SYS_ERR( "type id mismatch: '%u' != '%u'", types::TTypeInfo< CONSTLESS_TYPE >::id, id );
          return false;
       }
 

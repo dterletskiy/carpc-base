@@ -224,7 +224,7 @@ namespace carpc {
          void dump( ) const;
          void reset( );
       private:
-         void debug_message( const char* const message ) const;
+         void debug_message( const char* const message = "" ) const;
       private:
          CircularBuffer m_buffer;
    };

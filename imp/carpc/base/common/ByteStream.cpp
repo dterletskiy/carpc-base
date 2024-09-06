@@ -13,37 +13,37 @@ ByteStream::ByteStream( const std::size_t capacity, const bool is_reallocate_all
    : m_buffer( capacity, false, is_reallocate_allowed )
    // this configuration means that m_buffer will be a linear extendable buffer
 {
-   SYS_INF( );
+   debug_message( );
 }
 
 ByteStream::ByteStream( const void* const buffer, const std::size_t size, const std::size_t capacity, const bool is_reallocate_allowed )
    : m_buffer( ( capacity > size ? capacity : size ), false, is_reallocate_allowed )
    // this configuration means that m_buffer will be a linear extendable buffer
 {
-   SYS_INF( );
+   debug_message( );
    build( buffer, size );
 }
 
 ByteStream::ByteStream( const ByteStream& other )
    : m_buffer( other.m_buffer )
 {
-   SYS_INF( );
+   debug_message( );
 }
 
 ByteStream::ByteStream( ByteStream&& other )
    : m_buffer( std::move( other.m_buffer ) )
 {
-   SYS_INF( );
+   debug_message( );
 }
 
 ByteStream::~ByteStream( )
 {
-   SYS_INF( );
+   debug_message( );
 }
 
 bool ByteStream::build( const void* const buffer, const std::size_t size )
 {
-   SYS_INF( );
+   debug_message( );
    reset( );
    return push( buffer, size );
 }
@@ -51,7 +51,7 @@ bool ByteStream::build( const void* const buffer, const std::size_t size )
 void ByteStream::debug_message( const char* const message ) const
 {
    #ifdef DEBUG_STREAM
-      MSG_INF( "%s", message );
+      SYS_INF( "%s", message );
    #endif
 }
 

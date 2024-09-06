@@ -26,7 +26,7 @@ namespace carpc::converter {
    }
 
    # define TYPE_INFO( TYPE ) \
-      MSG_DBG( "'%s' -> '%s' (min = %s / max = %s / sizeof = %zu)" \
+      SYS_DBG( "'%s' -> '%s' (min = %s / max = %s / sizeof = %zu)" \
             , #TYPE \
             , carpc::converter::to_string< TYPE >( ) \
             , std::to_string( std::numeric_limits< TYPE >::min( ) ).c_str( ) \
@@ -44,7 +44,7 @@ namespace carpc::converter {
       static const T max_value = std::numeric_limits< T >::max( );
       static const std::string min_value_str = std::to_string( min_value );
       static const std::string max_value_str = std::to_string( max_value );
-      MSG_DBG( "converting '%s' (min = %s / max = %s / sizeof = %zu)"
+      SYS_DBG( "converting '%s' (min = %s / max = %s / sizeof = %zu)"
             , value_str.c_str( )
             , min_value_str.c_str( )
             , max_value_str.c_str( )
@@ -113,18 +113,18 @@ namespace carpc::converter {
          }
          else
          {
-            MSG_WRN( "trying to convert string to unsupported type" );
+            SYS_WRN( "trying to convert string to unsupported type" );
             result = false;
          }
       }
       catch( std::invalid_argument const& ex )
       {
-         MSG_ERR( "std::invalid_argument::what( ): %s", ex.what( ) );
+         SYS_ERR( "std::invalid_argument::what( ): %s", ex.what( ) );
          result = false;
       }
       catch( std::out_of_range const& ex )
       {
-         MSG_ERR( "std::out_of_range::what( ): %s", ex.what( ) );
+         SYS_ERR( "std::out_of_range::what( ): %s", ex.what( ) );
          result = false;
       }
 
