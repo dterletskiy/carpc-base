@@ -167,34 +167,16 @@ namespace carpc {
 
 
 
-   using tPriorityTYPE = std::uint16_t;
+   using tPriorityTYPE = std::uint8_t;
    using tPriority = TPriority< tPriorityTYPE >;
 
+   namespace priority {
 
+      extern const tPriority MIN;
+      extern const tPriority DEFAULT;
+      extern const tPriority TIMER;
+      extern const tPriority MAX;
 
-   enum class ePriority : tPriorityTYPE
-   {
-      DEFAULT,
-      TIMER,
-      MAX
-   };
-
-   const std::map< ePriority, tPriority > g_priority_map = {
-      { ePriority::DEFAULT   , tPriority( 100 ) },
-      { ePriority::TIMER     , tPriority( 200 ) },
-      { ePriority::MAX       , tPriority( 256 ) }  // Must be last and has max value
-   };
-
-   inline
-   const tPriority& priority( const ePriority type )
-   {
-      if( g_priority_map.end( ) == g_priority_map.find( type ) )
-      {
-         SYS_WRN( "Undefined priority" );
-         static const tPriority& dummy = g_priority_map.at( ePriority::DEFAULT );
-         return dummy;
-      }
-      return g_priority_map.at( type );
    }
 
 } // namespace carpc
