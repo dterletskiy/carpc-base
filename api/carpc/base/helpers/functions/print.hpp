@@ -54,6 +54,13 @@ namespace carpc {
    void print_hex( const void* p_buffer, const std::size_t size, const bool is_new_line = false );
    void print_bin( const void* p_buffer, const std::size_t size, const bool is_new_line = false );
 
+   void print_hex_ex(
+         const void* p_buffer, const std::size_t size, const std::size_t items_in_line = 16
+      );
+   void print_bin_ex(
+         const void* p_buffer, const std::size_t size, const std::size_t items_in_line = 16
+      );
+
    template< typename TYPE >
    void print( const TYPE& value, const bool is_new_line = false )
    {

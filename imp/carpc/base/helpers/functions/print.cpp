@@ -32,6 +32,31 @@ namespace carpc {
       if( is_new_line ) printf( "\n" );
    }
 
+   void print_hex_ex(
+         const void* const p_buffer, std::size_t size, std::size_t items_in_line
+      )
+   {
+      uint8_t count = 1;
+      for( size_t i = 0; i < size; ++i )
+      {
+         printf( "0x%02x ", static_cast< const std::uint8_t* const >( p_buffer )[i] );
+
+         if( 0 == items_in_line )
+            continue;
+
+         if( items_in_line == count )
+         {
+            printf( "\n" );
+            count = 1;
+         }
+         else
+         {
+            ++count;
+         }
+      }
+      printf( "\n" );
+   }
+
    template< >
    void print( const std::basic_string< char >& string, const bool is_new_line )
    {
