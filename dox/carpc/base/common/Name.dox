@@ -1,0 +1,44 @@
+/**
+ * @defgroup name_api Name API
+ *
+ * @brief Strongly typed object naming utilities.
+ *
+ * This module provides types and concepts used to represent
+ * object names in a type-safe and explicit manner.
+ *
+ * The API is designed to avoid accidental mixing of names
+ * belonging to different object domains.
+ */
+
+/**
+ * @ingroup name_api
+ *
+ * @brief Traits for TName value types.
+ *
+ * Defines the invalid value for a specific VALUE_TYPE.
+ */
+template< typename V >
+struct TNameTraits;
+
+/**
+ * @ingroup name_api
+ *
+ * @brief Concept describing valid TName value types.
+ *
+ * Requires regular semantics and ordering support.
+ */
+template< typename V >
+concept NameValue = ...
+
+/**
+ * @ingroup name_api
+ *
+ * @brief Strong-typed wrapper for object names.
+ *
+ * See @ref name_concept for detailed description.
+ */
+template< typename T, NameValue V = std::string >
+class TName
+{
+   ...
+};

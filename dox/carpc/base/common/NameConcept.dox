@@ -1,0 +1,45 @@
+/**
+ * @page name_concept TName concept
+ *
+ * @brief Strongly typed object naming concept.
+ *
+ * TName is a strong type used to represent object identifiers
+ * in a safe and explicit way.
+ *
+ * Instead of using raw strings, TName encodes the object
+ * domain in its template parameter.
+ *
+ * This prevents accidental comparison or assignment of
+ * names belonging to different object types.
+ *
+ * Example:
+ * @code
+ * struct Service {};
+ * struct Device {};
+ *
+ * using ServiceName = TName<Service>;
+ * using DeviceName  = TName<Device>;
+ *
+ * ServiceName s{ "Audio" };
+ * DeviceName  d{ "Audio" };
+ *
+ * // s == d; // compilation error
+ * @endcode
+ *
+ * Invalid state:
+ * Each TName has a well-defined invalid value provided
+ * via TNameTraits.
+ *
+ * This allows explicit representation of uninitialized
+ * or invalid names.
+ *
+ * Performance:
+ * TName precomputes its hash value on construction.
+ * This enables efficient usage in unordered containers
+ * and real-time systems.
+ *
+ * Related API:
+ * - @ref TName
+ * - @ref TNameTraits
+ * - @ref NameValue
+ */

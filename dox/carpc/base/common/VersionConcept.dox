@@ -1,0 +1,37 @@
+/**
+ * @page version_concept TVersion concept
+ *
+ * @brief Strongly typed semantic version.
+ *
+ * TVersion represents a semantic version number bound
+ * to a specific object domain.
+ *
+ * Versions are strongly typed to prevent mixing
+ * versions of different object types.
+ *
+ * A version consists of three components:
+ * - major
+ * - minor
+ * - patch
+ *
+ * Features:
+ * - explicit version components
+ * - lexicographical ordering
+ * - increment helpers for major, minor, patch
+ * - strong typing per object domain
+ *
+ * Example usage:
+ * @code
+ * using ServiceVersion = carpc::TVersion<Service>;
+ *
+ * ServiceVersion v1;
+ * ServiceVersion v2{ 1, 2, 3 };
+ *
+ * if( v2 > v1 )
+ * {
+ *    // newer version
+ * }
+ *
+ * v2.inc_minor( );
+ * @endcode
+ */

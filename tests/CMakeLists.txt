@@ -1,7 +1,5 @@
 cmake_minimum_required( VERSION 3.16 FATAL_ERROR )
 
-fenix_project( TARGET ${TARGET_PREFIX}base PROJECT BASE )
-
 
 
 ###############################################################################
@@ -19,7 +17,7 @@ include_directories( ${TRACING_SOURCE_DIR}/api )
 #                          Linkage include directories                        #
 #                                                                             #
 ###############################################################################
-link_directories( ${TRACING_BINARY_DIR} )
+link_directories( ${PROJECT_BINARY_DIR} )
 
 
 
@@ -36,25 +34,6 @@ link_directories( ${TRACING_BINARY_DIR} )
 #                             Code generation                                 #
 #                                                                             #
 ###############################################################################
-find_files_by_ext( RECURSE
-      FILES PLANTUML_FILES
-      LOCATION ${PROJECT_SOURCE_DIR}
-      EXTENTIONS ${EXTENTIONS_PLANTUML}
-   )
-generate_plantumls( PLANTUML_FILES ${PLANTUML_FILES} GENERATED_FILES PROJECT_GEN_PLANTUML_FILES )
-
-
-
-###############################################################################
-#                                                                             #
-#                             Build API file list                             #
-#                                                                             #
-###############################################################################
-find_files_by_ext( RECURSE
-      FILES PROJECT_API_FILES
-      LOCATION ${PROJECT_SOURCE_DIR}
-      EXTENTIONS ${EXTENTIONS_CPP_HDR}
-   )
 
 
 
@@ -64,8 +43,8 @@ find_files_by_ext( RECURSE
 #                                                                             #
 ###############################################################################
 find_files_by_ext( RECURSE
-      FILES PROJECT_SOURCE_FILES
-      LOCATION ${PROJECT_SOURCE_DIR}
+      FILES TEST_SOURCE_FILES
+      LOCATION ${CMAKE_CURRENT_LIST_DIR}
       EXTENTIONS ${EXTENTIONS_CPP_SRC}
    )
 
@@ -80,58 +59,32 @@ print_variables( )
 
 
 
-add_library(
-      ${PROJECT_TARGET_NAME}-shared SHARED
-      ${PROJECT_SOURCE_FILES}
+add_executable(
+      ${PROJECT_TARGET_NAME}-test
+      ${TEST_SOURCE_FILES}
    )
-set_target_properties(
-      ${PROJECT_TARGET_NAME}-shared PROPERTIES
-      OUTPUT_NAME ${PROJECT_TARGET_NAME}
-   )
-target_link_libraries(
+target_link_libraries( ${PROJECT_TARGET_NAME}-test
       ${PROJECT_TARGET_NAME}-shared
-      PUBLIC ${TRACING_TARGET_NAME}-shared
    )
 
-add_library(
-      ${PROJECT_TARGET_NAME}-static STATIC
-      ${PROJECT_SOURCE_FILES}
-   )
-set_target_properties(
-      ${PROJECT_TARGET_NAME}-static PROPERTIES
-      OUTPUT_NAME ${PROJECT_TARGET_NAME}
-   )
-target_link_libraries(
-      ${PROJECT_TARGET_NAME}-static
-      PUBLIC ${TRACING_TARGET_NAME}-static
-   )
+if( DLT_TRACE )
+   target_link_libraries( ${PROJECT_TARGET_NAME}-test dlt )
+endif( )
+if( ${OS_TARGET} EQUAL ${OS_ANDROID} )
+   target_link_libraries( ${PROJECT_TARGET_NAME}-test log )
+endif( )
 
-
-add_custom_target( "${PROJECT_TARGET_NAME}-documentation" ALL
-      COMMENT "cmake ${PROJECT_TARGET_NAME}-documentation"
-      DEPENDS ${PROJECT_GEN_PLANTUML_FILES}
-   )
-
-add_custom_target(
-      ${PROJECT_TARGET_NAME} ALL
-      DEPENDS
-         ${PROJECT_TARGET_NAME}-shared
-         ${PROJECT_TARGET_NAME}-static
-         ${PROJECT_TARGET_NAME}-documentation
+add_dependencies(
+      ${PROJECT_TARGET_NAME}-test
+      ${PROJECT_TARGET_NAME}
    )
 
 
 
-fenix_add_deploy_targets( NAME ${PROJECT_TARGET_NAME}
+fenix_add_deploy_targets( NAME ${PROJECT_TARGET_NAME}-test
       SUBDIR_TARGETS carpc
-      SUBDIR_INCLUDES carpc
       TARGETS
-         ${PROJECT_TARGET_NAME}-static
-         ${PROJECT_TARGET_NAME}-shared
-      INCLUDES
-         ${PROJECT_SOURCE_DIR}/api/carpc/
+         ${PROJECT_TARGET_NAME}-test
+      DEPENDS
+            deploy_${PROJECT_TARGET_NAME}
    )
-
-
-
-fenix_add_subdirectory( tests )

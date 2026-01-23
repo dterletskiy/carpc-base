@@ -2,70 +2,11 @@
 
 
 
-#if defined(__x86_64__) || defined(_M_X64)
-   #define _ARCH_x86_64_CPU_
-#elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
-   #define _ARCH_x86_32_CPU_
-#elif defined(__ARM_ARCH_2__)
-   #define _ARCH_ARM2_CPU_
-#elif defined(__ARM_ARCH_3__) || defined(__ARM_ARCH_3M__)
-   #define _ARCH_ARM3_CPU_
-#elif defined(__ARM_ARCH_4T__) || defined(__TARGET_ARM_4T)
-   #define _ARCH_ARM4T_CPU_
-#elif defined(__ARM_ARCH_5_) || defined(__ARM_ARCH_5E_)
-   #define _ARCH_ARM5_CPU_
-#elif defined(__ARM_ARCH_6T2_) || defined(__ARM_ARCH_6T2_)
-   #define _ARCH_ARM6T2_CPU_
-#elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__)
-   #define _ARCH_ARM6_CPU_
-#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
-   #define _ARCH_ARM7_CPU_
-#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
-   #define _ARCH_ARM7A_CPU_
-#elif defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
-   #define _ARCH_ARM7R_CPU_
-#elif defined(__ARM_ARCH_7M__)
-   #define _ARCH_ARM7M_CPU_
-#elif defined(__ARM_ARCH_7S__)
-   #define _ARCH_ARM7S_CPU_
-#elif defined(__aarch64__) || defined(_M_ARM64)
-   #define _ARCH_ARM64_CPU_
-#elif defined(mips) || defined(__mips__) || defined(__mips)
-   #define _ARCH_MIPS_CPU_
-#elif defined(__sh__)
-   #define _ARCH_SUPERH_CPU_
-#elif defined(__powerpc) || defined(__powerpc__) || defined(__powerpc64__) || defined(__POWERPC__) || defined(__ppc__) || defined(__PPC__) || defined(_ARCH_PPC)
-   #define _ARCH_POWERPC_CPU_
-#elif defined(__PPC64__) || defined(__ppc64__) || defined(_ARCH_PPC64)
-   #define _ARCH_POWERPC64_CPU_
-#elif defined(__sparc__) || defined(__sparc)
-   #define _ARCH_SPARC_CPU_
-#elif defined(__m68k__)
-   #define _ARCH_M68K_CPU_
-#else
-   #define _ARCH_UNKNOWN_CPU_
-#endif
-
-
-
-#if defined(__clang__)
-   #if __has_feature(cxx_rtti)
-      #define RTTI_ENABLED
-   #endif
-#elif defined(__GNUG__)
-   #if defined(__GXX_RTTI)
-      #define RTTI_ENABLED
-   #endif
-#elif defined(_MSC_VER)
-   #if defined(_CPPRTTI)
-      #define RTTI_ENABLED
-   #endif
-#endif
-
-
-
-#include <climits>
+#include <bit>
 #include <cstdint>
+#include <climits>
+
+
 
 #if CHAR_BIT != 8
    #error "unsupported char size"
@@ -73,39 +14,259 @@
 
 
 
-// https://stackoverflow.com/questions/2100331/c-macro-definition-to-determine-big-endian-or-little-endian-machine
+//======================================================================
+//  Architecture detection
+//======================================================================
+
+namespace carpc {
+
+   enum class eCpuArch : std::uint32_t
+   {
+      unknown = 0,
+
+      x86_32,
+      x86_64,
+
+      arm_v2,
+      arm_v3,
+      arm_v4t,
+      arm_v5,
+      arm_v6,
+      arm_v6t2,
+      arm_v7,
+      arm_v7a,
+      arm_v7r,
+      arm_v7m,
+      arm_v7s,
+      arm64,
+
+      mips,
+      powerpc,
+      powerpc64,
+      sparc,
+      superh,
+      m68k
+   };
+
+}
+
+
+
+//--------------------------------------------------------------------
+//  Compiler-provided architecture macros
+//--------------------------------------------------------------------
+
+#if defined(__x86_64__) || defined(_M_X64)
+
+   #define CARPC_ARCH_X86_64
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::x86_64
+
+#elif defined(__i386__) || defined(_M_IX86)
+
+   #define CARPC_ARCH_X86_32
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::x86_32
+
+
+#elif defined(__aarch64__) || defined(_M_ARM64)
+
+   #define CARPC_ARCH_ARM64
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm64
+
+
+#elif defined(__ARM_ARCH_7M__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V7
+   #define CARPC_ARCH_ARM_V7M
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v7m
+
+#elif defined(__ARM_ARCH_7R__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V7
+   #define CARPC_ARCH_ARM_V7R
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v7r
+
+#elif defined(__ARM_ARCH_7A__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V7
+   #define CARPC_ARCH_ARM_V7A
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v7a
+
+#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7S__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V7
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v7
+
+
+#elif defined(__ARM_ARCH_6T2__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V6T2
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v6t2
+
+#elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) || \
+      defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V6
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v6
+
+
+#elif defined(__ARM_ARCH_5__) || defined(__ARM_ARCH_5E__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V5
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v5
+
+
+#elif defined(__ARM_ARCH_4T__) || defined(__TARGET_ARM_4T)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V4T
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v4t
+
+
+#elif defined(__ARM_ARCH_3__) || defined(__ARM_ARCH_3M__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V3
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v3
+
+
+#elif defined(__ARM_ARCH_2__)
+
+   #define CARPC_ARCH_ARM
+   #define CARPC_ARCH_ARM_V2
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::arm_v2
+
+
+#elif defined(__mips__) || defined(__mips)
+
+   #define CARPC_ARCH_MIPS
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::mips
+
+
+#elif defined(__ppc64__) || defined(__powerpc64__)
+
+   #define CARPC_ARCH_POWERPC64
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::powerpc64
+
+#elif defined(__ppc__) || defined(__powerpc__) || defined(_ARCH_PPC)
+
+   #define CARPC_ARCH_POWERPC
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::powerpc
+
+
+#elif defined(__sparc__)
+
+   #define CARPC_ARCH_SPARC
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::sparc
+
+
+#elif defined(__sh__)
+
+   #define CARPC_ARCH_SUPERH
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::superh
+
+
+#elif defined(__m68k__)
+
+   #define CARPC_ARCH_M68K
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::m68k
+
+
+#else
+
+   #define CARPC_ARCH_UNKNOWN
+   #define CARPC_ARCH_VALUE carpc::eCpuArch::unknown
+
+#endif
+
+
+
+namespace carpc {
+
+   inline constexpr eCpuArch cpu_arch = CARPC_ARCH_VALUE;
+
+}
+
+
+
+//======================================================================
+//  RTTI detection
+//======================================================================
+
+#if defined(__clang__)
+
+   #if __has_feature(cxx_rtti)
+      #define CARPC_RTTI_ENABLED
+   #endif
+
+#elif defined(__GNUG__)
+
+   #if defined(__GXX_RTTI)
+      #define CARPC_RTTI_ENABLED
+   #endif
+
+#elif defined(_MSC_VER)
+
+   #if defined(_CPPRTTI)
+      #define CARPC_RTTI_ENABLED
+   #endif
+
+#endif
+
+
+
+//======================================================================
+//  Endianness (C++20)
+//======================================================================
+
 namespace carpc {
 
    enum class eByteOrder : std::uint32_t
    {
-      O32_LITTLE_ENDIAN    = 0x03020100ul,                                             // 00000011 00000010 00000001 00000000
-      O32_BIG_ENDIAN       = 0x00010203ul,                                             // 00000000 00000001 00000010 00000011
-      O32_PDP_ENDIAN       = 0x01000302ul, /* DEC PDP-11 (aka ENDIAN_LITTLE_WORD) */   // 00000001 00000000 00000011 00000010
-      O32_HONEYWELL_ENDIAN = 0x02030001ul  /* Honeywell 316 (aka ENDIAN_BIG_WORD) */   // 00000010 00000011 00000000 00000001
+      little = 0,
+      big    = 1,
+      mixed  = 2
    };
 
-   const char* const to_str( const eByteOrder& value );
+   inline constexpr eByteOrder byte_order =
+      ( std::endian::native == std::endian::little ) ? eByteOrder::little :
+      ( std::endian::native == std::endian::big    ) ? eByteOrder::big    :
+                                                        eByteOrder::mixed;
 
-   static const union
+   inline constexpr const char* to_str( const eByteOrder value )
    {
-      unsigned char bytes[4];
-      std::uint32_t value;
-   } o32_host_order = { { 0, 1, 2, 3 } };
-
-   const eByteOrder byte_order( );
+      switch( value )
+      {
+         case eByteOrder::little: return "little-endian";
+         case eByteOrder::big:    return "big-endian";
+         default:                 return "mixed-endian";
+      }
+   }
 
 }
 
-#define O32_HOST_ORDER ( o32_host_order.value )
 
-#if 0 // Example
 
-   int main( )
-   {
-      printf( "%s", carpc::to_str( carpc::byte_order( ) ) );
+//======================================================================
+//  Debug helpers
+//======================================================================
 
-      return 0;
-   }
+#if 0
+
+#include <cstdio>
+
+int main( )
+{
+   std::printf( "arch = %u\n", static_cast< unsigned >( carpc::cpu_arch ) );
+   std::printf( "endian = %s\n", carpc::to_str( carpc::byte_order ) );
+
+   return 0;
+}
 
 #endif
-

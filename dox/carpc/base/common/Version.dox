@@ -1,0 +1,5 @@
+/**
+ * @defgroup version_api Version API
+ *
+ * @brief Strongly typed version utilities.
+ */
