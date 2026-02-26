@@ -20,7 +20,7 @@ namespace carpc::utils::generate::type_id {
     * the build configuration and compiler, the implementation uses different
     * mechanisms:
     * 
-    * - If RTTI is enabled (RTTI_ENABLED is defined), 
+    * - If RTTI is enabled (CARPC_BUILD_RTTI_ENABLED is defined), 
     *    it uses `typeid(T).name()`.
     * - If RTTI is disabled:
     *    - On GCC or Clang, it uses `__PRETTY_FUNCTION__`.
@@ -39,7 +39,7 @@ namespace carpc::utils::generate::type_id {
    const std::string& name( )
    {
       static const std::string value =
-      #ifdef RTTI_ENABLED
+      #ifdef CARPC_BUILD_RTTI_ENABLED
          typeid( T ).name( );
       #else
          #if defined( __clang__ ) || defined( __GNUC__ )
